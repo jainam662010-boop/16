@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neural Goals — Class 10Edu</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nb"></div>
+<div class="page-layout">
+  <div id="sb"></div>
+  <main class="main-area">
+    <div class="page-head au">
+      <h1 class="grad-text">Neural Goals</h1>
+      <p style="color:var(--ink-dim)">Define and track your learning objectives within the nexus.</p>
+    </div>
+
+    <div style="max-width:800px" class="au-1">
+      <div class="todo-container glass-card">
+        <div class="todo-input-wrap">
+          <input type="text" id="todoInp" class="todo-inp" placeholder="New objective protocol..." onkeydown="if(event.key==='Enter')App.TodoApp.add()">
+          <button class="btn-glow" onclick="App.TodoApp.add()">Initialize Protocol</button>
+        </div>
+        <div id="todoList" class="todo-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/security.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  App.initPage('todo');
+});
+</script>
+</body>
+</html>

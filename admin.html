@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OS Command — Class 10Edu</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nb"></div>
+
+<!-- LOGIN WALL -->
+<div class="wall-overlay" id="loginWall">
+  <div class="glass-card" style="width:400px;text-align:center;padding:48px">
+    <div class="nav-gem" style="margin:0 auto 24px;width:64px;height:64px;font-size:32px">V</div>
+    <h1 class="grad-text">Admin Access</h1>
+    <p style="color:var(--ink-dim);margin-bottom:32px">Input authorization key</p>
+    <div class="fg" style="text-align:left">
+      <input type="password" class="todo-inp" id="adminPass" placeholder="Key Code..." onkeydown="if(event.key==='Enter')Admin.tryLogin()">
+    </div>
+    <div id="loginErr" style="color:#EF4444;font-size:0.85rem;margin-bottom:16px;font-weight:600"></div>
+    <button class="btn-glow" style="width:100%" onclick="Admin.tryLogin()">Authorize →</button>
+  </div>
+</div>
+
+<!-- ADMIN BODY -->
+<div class="page-layout" id="adminBody" style="display:none">
+  <div id="sb"></div>
+  <main class="main-area">
+    <div class="page-head au">
+      <h1 class="grad-text">Control Nexus</h1>
+      <p style="color:var(--ink-dim)">Global system configuration and content management.</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Sidebar Nav -->
+      <nav class="glass-card" style="padding:16px;height:fit-content">
+        <div id="adminNavLinks" style="display:grid;gap:8px"></div>
+      </nav>
+
+      <!-- Main Panels -->
+      <div id="adminPanels" class="au-1">
+        <!-- Panels will be dynamically generated here -->
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/security.js"></script>
+<script src="js/admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  App.initPage('admin');
+  Admin.init();
+});
+</script>
+</body>
+</html>

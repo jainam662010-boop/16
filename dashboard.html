@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OS Dashboard — Class 10Edu</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="nb"></div>
+<div class="page-layout">
+  <div id="sb"></div>
+  <main class="main-area" id="mainArea">
+    <!-- HERO SECTION -->
+    <section class="hero-section au">
+      <div class="hero-text">
+        <h1 class="grad-text">Digital Nexus</h1>
+        <p>Welcome to your futuristic learning environment. Your path to excellence begins here.</p>
+        <div style="margin-top:32px;display:flex;gap:16px">
+          <button class="btn-glow">Continue Path</button>
+          <div class="streak-flame">🔥</div>
+        </div>
+      </div>
+      <div class="glass-card" style="width:300px;text-align:center">
+        <div class="ring-container" style="margin:0 auto 16px">
+          <svg class="ring-svg" width="120" height="120">
+            <defs><linearGradient id="ringGrad"><stop offset="0%" stop-color="var(--accent-1)"/><stop offset="100%" stop-color="var(--accent-3)"/></linearGradient></defs>
+            <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+            <circle class="ring-fill" cx="60" cy="60" r="52" style="stroke-dasharray:326;stroke-dashoffset:80"></circle>
+          </svg>
+          <div class="ring-val">75%</div>
+        </div>
+        <div style="font-weight:800;font-size:0.9rem">DAILY SYNC</div>
+      </div>
+    </section>
+
+    <!-- ASYMMETRIC GRID -->
+    <div class="dashboard-grid" style="margin-top:48px">
+      <!-- Left Column: Subjects -->
+      <div class="subjects-masonry au-1" id="subjGrid">
+        <!-- Will be populated by JS -->
+      </div>
+
+      <!-- Right Column: Goals & Insights -->
+      <div class="au-2">
+        <div class="todo-container glass-card" style="margin-bottom:32px">
+          <h3 style="margin-bottom:20px">Daily Protocols</h3>
+          <div class="todo-input-wrap">
+            <input type="text" id="todoInp" class="todo-inp" placeholder="New objective..." onkeydown="if(event.key==='Enter')App.TodoApp.add()">
+            <button class="btn-glow" style="padding:10px" onclick="App.TodoApp.add()">+</button>
+          </div>
+          <div id="todoList" class="todo-list"></div>
+        </div>
+
+        <div class="glass-card">
+          <h3 style="margin-bottom:16px">Neural Insights</h3>
+          <p style="font-size:0.9rem;color:var(--ink-dim)">Your focus is 15% higher in Science today. Keep the momentum going!</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/security.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  App.initPage('dashboard');
+  const data = await App.loadData();
+  const p = App.getProgress();
+
+  const grid = document.getElementById('subjGrid');
+  grid.innerHTML = data.subjects.map((s, i) => {
+    const pct = App.getSubjPct(s.id, s);
+    return `
+      <div class="subj-tile" onclick="location.href='subject.html?id=${s.id}'" style="border-bottom: 4px solid ${s.color || 'var(--accent-1)'}">
+        <div style="font-size:3rem;margin-bottom:16px">${s.icon}</div>
+        <h3 style="margin-bottom:8px">${VidyaSec.sanitize(s.name)}</h3>
+        <div style="font-size:0.85rem;font-weight:700;color:var(--ink-dim)">${pct}% COMPLETED</div>
+      </div>
+    `;
+  }).join('');
+  
+  App.initTilt();
+});
+</script>
+</body>
+</html>

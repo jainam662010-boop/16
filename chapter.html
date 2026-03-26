@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neural Stream — Class 10Edu</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.flow-container { max-width: 900px; margin: 0 auto; }
+.step-pane { display: none; }
+.step-pane.active { display: block; animation: fadeIn 0.8s var(--ease-spring); }
+.teacher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; }
+.content-orb {
+  padding: 32px; text-align: center; cursor: pointer;
+  background: var(--bg-panel); border: 1px solid var(--glass-border);
+  border-radius: 50%; width: 200px; height: 200px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transition: all var(--t-base) var(--ease-spring);
+}
+.content-orb:hover {
+  transform: scale(1.1) translateY(-10px);
+  border-color: var(--accent-1);
+  box-shadow: var(--shadow-neon);
+}
+</style>
+</head>
+<body>
+<div id="nb"></div>
+<div class="page-layout">
+  <div id="sb"></div>
+  <main class="main-area">
+    <div class="flow-container">
+      <div class="page-head au">
+        <h1 id="chTitle" class="grad-text">Neural Stream</h1>
+        <p id="chMeta" style="color:var(--ink-dim)">Selecting neural pathway...</p>
+      </div>
+
+      <!-- STEP 1: TEACHER SELECTION -->
+      <div id="step1" class="step-pane active">
+        <h2 style="margin-bottom:32px">1. Select Neural Guide</h2>
+        <div id="teacherGrid" class="teacher-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- STEP 2: CONTENT SELECTION -->
+      <div id="step2" class="step-pane">
+        <h2 style="margin-bottom:32px">2. Access Data Stream</h2>
+        <div style="display:flex;justify-content:center;gap:40px;flex-wrap:wrap" id="contentOptions">
+          <!-- Populated by JS -->
+        </div>
+        <button class="btn-glow" style="margin-top:48px" onclick="showStep(1)">← Change Guide</button>
+      </div>
+
+      <!-- VIDEO VIEW -->
+      <div id="videoPane" class="step-pane">
+        <div class="glass-card" style="padding:0;overflow:hidden">
+          <div id="videoWrap" style="aspect-ratio:16/9;background:#000"></div>
+          <div style="padding:24px">
+            <h3 id="lessonTitle">Data Stream Active</h3>
+            <button class="btn-glow" style="margin-top:20px" onclick="showStep(2)">← Return to Options</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/security.js"></script>
+<script>
+let currentSubj, currentCh;
+
+function showStep(n) {
+  document.querySelectorAll('.step-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('step' + n)?.classList.add('active');
+  if(n === 'Video') document.getElementById('videoPane').classList.add('active');
+  App.initTilt();
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const sid = App.getParam('subject'), cid = App.getParam('chapter');
+  App.initPage(sid);
+  const data = await App.loadData();
+  currentSubj = App.getSubject(sid);
+  currentCh = App.getChapter(sid, cid);
+
+  if(!currentCh) return;
+  document.getElementById('chTitle').textContent = currentCh.title;
+  document.getElementById('chMeta').textContent = `${currentSubj.name} • Module ${cid}`;
+
+  // Render Teachers
+  const teachers = App._parseLS('vm_admin_data', {teachers:[]}).teachers;
+  const tGrid = document.getElementById('teacherGrid');
+  tGrid.innerHTML = (teachers.length ? teachers : [{name:'Default Guide', channel:'Vidya Core'}]).map(t => `
+    <div class="glass-card" onclick="showStep(2)" style="cursor:pointer;text-align:center">
+      <div style="font-size:3rem;margin-bottom:16px">👤</div>
+      <h3>${VidyaSec.sanitize(t.name)}</h3>
+      <p style="color:var(--ink-dim);font-size:0.8rem">${VidyaSec.sanitize(t.channel)}</p>
+    </div>
+  `).join('');
+
+  // Render Content Orbs
+  const options = document.getElementById('contentOptions');
+  const items = [
+    {n:'Video Lecture', i:'📺', act:()=>playVideo()},
+    {n:'Neural Notes', i:'📄', act:()=>alert('Notes Loaded')},
+    {n:'Flash Quiz', i:'🧩', act:()=>alert('Quiz Syncing')}
+  ];
+  options.innerHTML = items.map(it => `
+    <div class="content-orb" onclick="(${it.act.toString()})()">
+      <div style="font-size:3rem;margin-bottom:12px">${it.i}</div>
+      <div style="font-weight:800;font-size:0.9rem">${it.n}</div>
+    </div>
+  `).join('');
+
+  App.initTilt();
+});
+
+function playVideo() {
+  const v = currentCh.lessons?.[0]?.videoId || 'dQw4w9WgXcQ';
+  document.getElementById('videoWrap').innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${v}?autoplay=1" frameborder="0" allowfullscreen></iframe>`;
+  document.getElementById('lessonTitle').textContent = currentCh.lessons?.[0]?.title || 'Core Protocol';
+  showStep('Video');
+}
+</script>
+</body>
+</html>
